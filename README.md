@@ -11,3 +11,15 @@ En una primera iteración resolverán todo el trabajo práctico usando c con pyt
 
 Casos de prueba, diagramas de bloques, diagrama de secuencia, pruebas de performance para comparar c y python son bienvenidos, profiling de la app de c es un plus.
 
+# Implemetación
+
+## Compilación codigo C para crear biblioteca compartida
+
+- gcc -shared -W -o libgini_calc.so gini_calc.c
+
+## Ejecutar codigo en Python con librerias en C
+- python server.py
+- python3 server.py
+
+
+

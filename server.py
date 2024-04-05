@@ -9,29 +9,29 @@ def run_server():
 
     data = get_data()
 
-    total = data[0]["total"]
-
     filtered = filter_country(data[1])
 
     values = get_values(filtered)   # Lista de flotantes 
-
-    print(values[3])
+    values_int = [1 for x in values]
 
     # Cargar la biblioteca compartida
     libgini = ctypes.CDLL('./libgini_calc.so')
 
     # Definir los tipos de argumentos y el tipo de retorno de la función en C
-    libgini.calculate_gini.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int]
-    libgini.calculate_gini.restype = ctypes.c_float
+    libgini.float_array_to_int_array.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
     
     # Convertir la lista de Python a un arreglo de C
     data_array = (ctypes.c_float * len(values))(*values)
+
+    result_array = (ctypes.c_int * len(values))(*values_int)
     
     # Llamar a la función de C
-    result = libgini.calculate_gini(data_array, len(data))
+    libgini.float_array_to_int_array(data_array, len(values), result_array)
 
-    print("El índice GINI calculado es:", result)
-
+    a = np.fromiter(result_array, dtype=np.int32, count=len(values))
+    print(values)
+    print(result_array)
+    print(a)
 
 
 def get_data():

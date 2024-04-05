@@ -1,6 +1,7 @@
 import ctypes
 import numpy as np
 import requests
+import matplotlib.pyplot as plt
 
 
 API_URL = "https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22"
@@ -11,7 +12,7 @@ def run_server():
 
     filtered = filter_country(data[1])
 
-    values = get_values(filtered)   # Lista de flotantes 
+    values,fechas = get_values(filtered)   # Lista de flotantes 
     values_int = [1 for x in values]
 
     # Cargar la biblioteca compartida
@@ -28,10 +29,19 @@ def run_server():
     # Llamar a la función de C
     libgini.float_array_to_int_array(data_array, len(values), result_array)
 
-    a = np.fromiter(result_array, dtype=np.int32, count=len(values))
-    print(values)
-    print(result_array)
-    print(a)
+    results = np.fromiter(result_array, dtype=np.int32, count=len(values))
+
+    graficar(results[::-1],fechas[::-1])
+
+def graficar(dataY, dataX):
+    plt.plot(dataX, dataY, marker="o")
+    plt.grid()
+    plt.ylabel("gene index")
+    plt.xlabel("years")
+    plt.title("Argentina Gene Index Evolution")
+    plt.savefig("gene.png")
+
+    
 
 
 def get_data():
@@ -54,10 +64,12 @@ def filter_country(country_data):
 
 def get_values(filtered_data):
     values = np.array([],dtype = np.float32)
+    fechas = []
     for data in filtered_data:
         if data["value"] is not None:
             values = np.append(values, data["value"])
-    return values
+            fechas.append(data["date"])
+    return (values, fechas)
 
 
 if __name__ == "__main__":

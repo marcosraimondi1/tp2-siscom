@@ -21,5 +21,8 @@ Casos de prueba, diagramas de bloques, diagrama de secuencia, pruebas de perform
 - python server.py
 - python3 server.py
 
+# Resultados primera parte
+![image](./gene.png)
+
 
 

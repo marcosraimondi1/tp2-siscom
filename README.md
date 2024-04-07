@@ -1,27 +1,28 @@
 # TP1
-## Enunciado y condiciones de aprobación
 
-Para aprobar el TP#1 se debe diseñar e implementar una interfaz que muestre el índice GINI. La capa superior recuperará la información del banco mundial https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22. Se recomienda el uso de API Rest y Python. Los datos de consulta realizados deben ser entregados a un programa en C (capa intermedia) que convocará rutinas en ensamblador para que hagan los cálculos de conversión de float a enteros y devuelva el índice de un país como Argentina u otro sumando uno (+1). Luego el programa en C o python mostrará los datos obtenidos.-
+## Implemetación
 
-Se debe utilizar el stack para convocar, enviar parámetros y devolver resultados. O sea utilizar las convenciones de llamadas de lenguajes de alto nivel a bajo nivel.- 
+Se trata de un desarrollo por capas, en primera instancia se levanta un programa en **python** que utilizando la biblioteca *requests* hace una peticion del tipo **GET** a una [API publica](https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22). La respuesta se procesa y se convierte en un objeto json el cual se filtra para obtener los datos del indice gene del pais de interes (Argentina). Esta lista filtrada se pasa posteriormente convierte a un arreglo de C utilizando la libreria de *ctypes* que permite realizar la conversion de tipos de datos de python a tipos de dato aceptables para C. Con esto se puede proceder a utilizar las funciones de la libreria desarrollada en C. Esta libreria carga los valores en un arreglo el cual despues es graficado en python usando la libreria *matplotlib*. El grafico resultante se guarda en una imagen "gene.png" en el mismo directorio.
 
-En una primera iteración resolverán todo el trabajo práctico usando c con python sin ensamblador. En la siguiente iteración usarán los conocimientos de ensamblador para completar el tp.
+### Diagrama de Bloques
 
-**IMPORTANTE**: en esta segunda iteración deberan mostrar los resultados con gdb, para ello pueden usar un programa de C puro. Cuando depuren muestran el estado del área de memoria que contiene el stack antes, durante y después de la función. 
+![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/fd970110-dd68-4c2e-9869-f5b0310c3559)
 
-Casos de prueba, diagramas de bloques, diagrama de secuencia, pruebas de performance para comparar c y python son bienvenidos, profiling de la app de c es un plus.
+### Diagrama de Secuencia
 
-# Implemetación
+![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/b59cda96-25b7-43c3-92bc-e5112af64f69)
 
-## Compilación codigo C para crear biblioteca compartida
+## Instrucciones de Uso
+
+### Compilación codigo C para crear biblioteca compartida
 
 - gcc -shared -W -o libgini_calc.so gini_calc.c
 
-## Ejecutar codigo en Python con librerias en C
+### Ejecutar codigo en Python con librerias en C
 - python server.py
 - python3 server.py
 
-# Resultados primera parte
+## Resultados primera parte
 ![image](./gene.png)
 
 

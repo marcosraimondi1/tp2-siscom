@@ -18,9 +18,10 @@ Se trata de un desarrollo por capas, en primera instancia se levanta un programa
 
 - gcc -shared -W -o libgini_calc.so gini_calc.c
 
-## Instalar librerias necesarias para generar los graficos
+## Instalar librerias necesarias
 
-- pip3 install matplotlib
+- pip install matplotlib requests numpy
+- pip3 install matplotlib requests numpy
 
 ### Ejecutar codigo en Python con librerias en C
 - python server.py

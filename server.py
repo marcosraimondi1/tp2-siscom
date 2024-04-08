@@ -9,11 +9,12 @@ API_URL = "https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?for
 def run_server():
 
     data = get_data()
-
-    filtered = filter_country(data[1])
+    country = input("Enter country: ")
+    
+    filtered = filter_by_country(data[1], country)
 
     values,fechas = get_values(filtered)   # Lista de flotantes 
-    values_int = [1 for x in values]
+    values_int = np.zeros(len(values), dtype=np.int32)
 
     # Cargar la biblioteca compartida
     libgini = ctypes.CDLL('./libgini_calc.so')
@@ -31,15 +32,15 @@ def run_server():
 
     results = np.fromiter(result_array, dtype=np.int32, count=len(values))
 
-    graficar(results[::-1],fechas[::-1])
-
-def graficar(dataY, dataX):
-    plt.plot(dataX, dataY, marker="o")
+    plt.figure()
+    plt.plot(fechas[::-1], values[::-1], marker="x")
+    plt.plot(fechas[::-1], results[::-1], marker="o")
     plt.grid()
+    plt.title(f"{country.upper()}'s Gene Index Evolution")
     plt.ylabel("gene index")
     plt.xlabel("years")
-    plt.title("Argentina Gene Index Evolution")
-    plt.savefig("gene.png")
+    plt.legend(["original", "procesado"])
+    plt.savefig(f"./results/{country}_gene_index.png")
 
     
 
@@ -49,15 +50,16 @@ def get_data():
 
     if response.status_code != 200:
         print("Failed fetching data from API", response)
+        exit()
 
     data = response.json()
 
     return data
 
-def filter_country(country_data):
+def filter_by_country(country_data, country):
     filtered = []
     for elemento in country_data:
-        if elemento["country"]["value"] == "Argentina":
+        if elemento["country"]["value"].lower() == country.lower():
             filtered.append(elemento)
 
     return filtered

@@ -13,6 +13,17 @@ Se trata de un desarrollo por capas, en primera instancia se levanta un programa
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/b59cda96-25b7-43c3-92bc-e5112af64f69)
 
 ## Instrucciones de Uso
+
+### Compilación codigo C para crear libreria compartida
+
+- nasm -f elf32 sum_array.asm 
+- gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
+
+O para probar la funcion en C con assembler:
+- nasm -f elf32 sum_array.asm 
+- gcc -o prueba sum_array.o -m32 gini_calc.c 
+- ./prueba
+
 ### Instalar Librerias de Python
 Para correr python con un programa en C compilado para 32 bits, es necesario utilizar una entorno de python tambien de 32 bits.
 
@@ -34,26 +45,10 @@ pip install --upgrade pip
 pip install numpy requests matplotlib
 ```
 
-### Compilación codigo C para crear libreria compartida
-
-- nasm -f elf32 sum_array.asm 
-- gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
-
-O para probar la funcion en C con assembler:
-- nasm -f elf32 sum_array.asm 
-- gcc -o prueba sum_array.o -m32 gini_calc.c 
-- ./prueba
-
-## Instalar librerias necesarias
-
-- pip install matplotlib requests numpy
-- pip3 install matplotlib requests numpy
-
 ### Ejecutar codigo en Python con librerias en C
 - python server.py
-- python3 server.py
 
-## Resultados primera parte
+## Resultados
 ![image](./results/argentina_gene_index.png)
 ![image](./results/austria_gene_index.png)
 ![image](./results/canada_gene_index.png)

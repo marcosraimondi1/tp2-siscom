@@ -1,31 +1,35 @@
+#include <stdio.h>
+
 /**
- * @file gini_calc.c
- * @brief funcion para calcular el promedio del indice GINI
- * 
- * @param data indices Gini sin procesar
- * @param size cantidad de indices enviados
- * 
- * @return promedio de indices gini pasados
- */
-#include <stdlib.h>
-float calculate_gini(float *data, int size) {
-  float sum = 0;
-  for (int i = 0; i < size; i++) {
-    sum += data[i];
-  }
-  return sum / size;
-}
+ * @brief Convierte a entero el input y lo suma en uno
+ * Funcion Implementada en assembler "./sum_array.asm"
+ *
+ * @param input array de flotantes
+ * @param size tamano de array input y output
+ * @param output array de enteros de resultado
+ * */
+extern void _sum_array(float *input, int size, int *output);
 
 /**
  * @brief funcion para castear a entero y sumarle uno a los indices Gini
- * 
+ *
  * @param data indices Gini sin procesar
  * @param size cantidad de indices enviados
  * @param result indices casteados e incrementados en una unidad
  */
 void float_array_to_int_array(float *data, int size, int *result) {
-  int *new_array = malloc(sizeof(int) * size);
-  for (int i = 0; i < size; i++) {
-    result[i] = (int)(data[i] + 1);
-  }
+  _sum_array(data, size, result);
+}
+
+// para probar ---------------------
+int main(int argc, char *argv[]) {
+  float input[3] = {12.2, 5.45, 12.8};
+  int output[3] = {0, 0, 0};
+
+  _sum_array(input, 3, output);
+
+  for (int i = 0; i < 3; i++)
+    printf("%f, %i\n", input[i], output[i]);
+
+  return 0;
 }

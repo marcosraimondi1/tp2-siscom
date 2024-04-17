@@ -13,10 +13,36 @@ Se trata de un desarrollo por capas, en primera instancia se levanta un programa
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/b59cda96-25b7-43c3-92bc-e5112af64f69)
 
 ## Instrucciones de Uso
+### Instalar Librerias de Python
+Para correr python con un programa en C compilado para 32 bits, es necesario utilizar una entorno de python tambien de 32 bits.
 
-### Compilación codigo C para crear biblioteca compartida
+- Instalar [miniconda](https://docs.anaconda.com/free/miniconda/)
+- Instalar entorno de py32:
+```sh
+conda create -n py32 python=3.7 -c https://repo.anaconda.com/pkgs/main/linux-32/ --override-channels
+```
+- Activar entorno de py32:
+```sh
+conda activate py32
+```
+- Actualizar pip:
+```sh
+pip install --upgrade pip
+```
+- Instalar librerias:
+```sh
+pip install numpy requests matplotlib
+```
 
-- gcc -shared -W -o libgini_calc.so gini_calc.c
+### Compilación codigo C para crear libreria compartida
+
+- nasm -f elf32 sum_array.asm 
+- gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
+
+O para probar la funcion en C con assembler:
+- nasm -f elf32 sum_array.asm 
+- gcc -o prueba sum_array.o -m32 gini_calc.c 
+- ./prueba
 
 ## Instalar librerias necesarias
 

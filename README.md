@@ -15,14 +15,21 @@ Se trata de un desarrollo por capas, en primera instancia se levanta un programa
 ## Instrucciones de Uso
 
 ### Compilación codigo C para crear libreria compartida
-
-- nasm -f elf32 sum_array.asm 
-- gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
+- Crear objeto del codigo de assembler: (compilar para 32 bits)
+```sh
+nasm -f elf32 sum_array.asm
+```
+- Compilar driver de C y crear libreria compartida (compilacion de 32 bits):
+```sh
+gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
+```
 
 O para probar la funcion en C con assembler:
-- nasm -f elf32 sum_array.asm 
-- gcc -o prueba sum_array.o -m32 gini_calc.c 
-- ./prueba
+```sh
+nasm -f elf32 sum_array.asm 
+gcc -o prueba sum_array.o -m32 gini_calc.c 
+./prueba
+```
 
 ### Instalar Librerias de Python
 Para correr python con un programa en C compilado para 32 bits, es necesario utilizar una entorno de python tambien de 32 bits.
@@ -45,8 +52,10 @@ pip install --upgrade pip
 pip install numpy requests matplotlib
 ```
 
-### Ejecutar codigo en Python con librerias en C
-- python server.py
+### Ejecutar programa de Python
+```sh
+python server.py
+```
 
 ## Resultados
 ![image](./results/argentina_gene_index.png)

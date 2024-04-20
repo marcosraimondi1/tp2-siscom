@@ -35,6 +35,17 @@ gcc -o prueba sum_array.o -m32 gini_calc.c
 Para correr python con un programa en C compilado para 32 bits, es necesario utilizar una entorno de python tambien de 32 bits.
 
 - Instalar [miniconda](https://docs.anaconda.com/free/miniconda/)
+```sh
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh--override-channels
+```
+- Después de la instalación, inicialice su Miniconda. Los siguientes comandos se inicializan para los shells bash y zsh:
+```sh
+~/miniconda3/bin/conda init bash
+~/miniconda3/bin/conda init zsh
+```
 - Instalar entorno de py32:
 ```sh
 conda create -n py32 python=3.7 -c https://repo.anaconda.com/pkgs/main/linux-32/ --override-channels
@@ -64,4 +75,71 @@ python server.py
 ![image](./results/finland_gene_index.png)
 
 
+## Tests
+
+### Prueba End to End
+
+Se ve el funcionamiento del programa desde el punto de vista del usuario, en la cual 
+usamos una interfaz visual creada desde python.
+
+
+
+FALTA IMAGEN FINAL
+
+
+
+
+### Prueba test función Assembler
+
+Se llama a la funcion de assembler desde C pasando un arreglo de numeros para ver como
+se comporta la funcion y que valores que retorna sean los correctos.
+
+![Image](<testing screenshots/Test_Assembler_main_cod.png>)
+
+Resultados de la ejecución:
+
+![image](<testing screenshots/Test_Assembler_function.png>)
+
+### Prueba test función en C
+
+Se llama desde Python a la funcion de C pasando un arreglo de numeros 
+flotantes para ver que los valores retornados sean los correctos. 
+Pero  el punto principal es mostrar la conexión efectiva entre C y 
+Python a travez de la biblioteca requests y ctypes.
+
+![image](<testing screenshots/Test_C_Python_Conection_main_cod.png>)
+
+prueba de ejecución:
+
+![image](<testing screenshots/Test_C_Python_Conection.png>)
+
+### GDB
+
+- Compilar el programa con la opción de depuración (con la flag -g):
+```sh
+gcc -g -o prueba sum_array.o -m32 gini_calc.c 
+```
+- Correr gdb:
+```sh
+gdb prueba
+```
+- Se debe colocar un break point en el punto donde se quiere arrancar el debug:
+```sh
+break _sum_array
+```
+En este caso se realiza el debug desde que se llama a la funcion en assembler.
+
+- Se debe ir paso por paso con la instrucción nexti se vera lo siguiente:
+
+![image](<testing screenshots/gdb_1.png>)
+
+En donde podemos observar que se ingresa al bucle creado en el programa de assembler.
+
+- luego una vez aqui se puede ver el stack de llamadas que es el siguiente:
+
+![image](<testing screenshots/gdb_3_backtrace.png>)
+
+- Tambien si se utiliza el comando info locals podemos ver como se hace la asignación nuestro puntero en cuanto finaliza la funcion de assembler:
+
+![image](<testing screenshots/gdb_4_Asignation.png>)
 

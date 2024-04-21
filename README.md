@@ -9,13 +9,24 @@ Todo esto se complementa con una capa superior de interaz de usuario que permite
 ### Diagrama de Bloques
 
 ```mermaid
-flowchart TD
-    A[Start Server] --> B(Get Data)
-    B --> C(Filter Data)
+flowchart TB
+    A0[User Interface] --> A
+    A(Get User Input) --> B(Get Data)
+    B --> C(Filter Data By Country)
+    B <--> Get_Data
     C --> D(Get Values and Dates)
     D --> E(Process Values)
     E --> F(Plot Result)
-    F --> B
+    E <--> gini_calc.so
+    F --> A
+
+    subgraph Get_Data
+    B1(Server)<-->|GET|B2(World Bank API)
+    end
+
+    subgraph gini_calc.so
+    E2(gini_calc.c)-->E3(sum_array.asm)
+    end
 ```
 
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/fd970110-dd68-4c2e-9869-f5b0310c3559)
@@ -36,7 +47,7 @@ nasm -f elf32 sum_array.asm
 gcc -shared -W -o libgini_calc.so sum_array.o -m32 gini_calc.c
 ```
 
-O para probar la funcion en C con assembler:
+O para correr el test de C:
 ```sh
 nasm -f elf32 sum_array.asm 
 gcc -o prueba sum_array.o -m32 gini_calc.c 
@@ -86,20 +97,16 @@ pip install pytest
 ### Ejecutar programa de Python
 
 ```sh
-python server.py
+python main.py
 ```
 
 ## Resultados
+### Graficos
 ![image](./results/argentina_gene_index.png)
 ![image](./results/austria_gene_index.png)
-![image](./results/canada_gene_index.png)
-![image](./results/finland_gene_index.png)
 
 
-## Tests
-
-### Prueba End to End
-
+### Interfaz de Usuario
 Se ve el funcionamiento del programa desde el punto de vista del usuario, en la cual 
 usamos una interfaz visual creada desde python.
 
@@ -121,6 +128,9 @@ Al precionar el boton se genera el grafico en una ventana particular
 
 ![image](<testing screenshots/End_to_End_4.png>)
 
+
+## Tests
+
 ### Prueba test función Assembler
 
 Se llama a la funcion de assembler desde C pasando un arreglo de numeros para ver como
@@ -134,6 +144,7 @@ Resultados de la ejecución:
 
 ### Tests Unitarios con pytest
 
+Se prueban todas las funciones relativas al fetching de datos y manipulacion de los mismos.
 Para correr los tests unitarios de python correr pytest en el directorio raiz:
 ```sh
 pytest

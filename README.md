@@ -66,6 +66,10 @@ conda create -n py32 python=3.7 -c https://repo.anaconda.com/pkgs/main/linux-32/
 ```sh
 conda activate py32
 ```
+- Instalar libc11-6 (32 bits):
+```sh
+sudo apt-get install libx11-6:i386
+```
 - Actualizar pip:
 ```sh
 pip install --upgrade pip

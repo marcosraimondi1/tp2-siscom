@@ -1,33 +1,9 @@
 import ctypes
 import numpy as np
 import requests
-import matplotlib.pyplot as plt
 
+API_URL = "https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1"
 
-API_URL = "https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22"
-
-def run_server():
-
-    data = get_data()
-    country = input("Enter country: ")
-    
-    filtered = filter_by_country(data[1], country)
-
-    values,fechas = get_values_and_dates(filtered)   # Lista de flotantes 
-
-    results = process_values(values)
-
-    plt.figure()
-    plt.plot(fechas[::-1], values[::-1], marker="x")
-    plt.plot(fechas[::-1], results[::-1], marker="o")
-    plt.grid()
-    plt.title(f"{country.upper()}'s Gene Index Evolution")
-    plt.ylabel("gene index")
-    plt.xlabel("years")
-    plt.legend(["original", "procesado"])
-    plt.savefig(f"./results/{country}_gene_index.png")
-
-    
 def process_values(values):
 
     # Cargar la biblioteca compartida
@@ -75,7 +51,3 @@ def get_values_and_dates(filtered_data):
             fechas.append(data["date"])
     return (values, fechas)
 
-
-if __name__ == "__main__":
-    run_server()
-   

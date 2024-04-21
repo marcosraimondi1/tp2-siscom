@@ -1,11 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-import requests
-import numpy as np
-import ctypes
 import time
 import matplotlib.pyplot as plt
+from server import get_values_and_dates, process_values, get_data, filter_by_country
 
 class Interfaz:
     def __init__(self, master):
@@ -66,47 +64,21 @@ class Interfaz:
             self.master.update()                                    # Actualizar la ventana
             time.sleep(0.03)                                        # Agregar un pequeño retraso para una animación más suave
 
-    def get_data(self, country):
-        API_URL = f"https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22{country}%22"
-        response = requests.get(API_URL)
-        if response.status_code != 200:
-            print("Failed fetching data from API", response)
-            exit()
-        data = response.json()
-        return data
-
-    def filter_by_country(self, country_data, country):
-        filtered = []
-        for element in country_data:
-            if element["country"]["value"].lower() == country.lower():
-                filtered.append(element)
-        return filtered
-
-    def get_values(self, filtered_data):
-        values = np.array([], dtype=np.float32)
-        fechas = []
-        for data in filtered_data:
-            if data["value"] is not None:
-                values = np.append(values, data["value"])
-                fechas.append(data["date"])
-        return values, fechas
-
     def mostrar_grafico(self):
         pais_seleccionado = self.combo_paises.get()
         if pais_seleccionado != "" and pais_seleccionado in self.paises:
             print("Se ha seleccionado el país:", pais_seleccionado)
 
-            data = self.get_data(pais_seleccionado)
-
-            filtered = self.filter_by_country(data[1], pais_seleccionado)
-
-            values, fechas = self.get_values(filtered)
-
-            #results = process_values(values)
+            # procesar peticion
+            data = get_data()
+            filtered = filter_by_country(data[1], pais_seleccionado)
+            values, fechas = get_values_and_dates(filtered)
+            results = process_values(values)
             
+            # mostrar resultados
             plt.figure()
             plt.plot(fechas[::-1], values[::-1], marker="x")
-            plt.plot(fechas[::-1], values[::-1], marker="o")
+            plt.plot(fechas[::-1], results[::-1], marker="o")
             plt.grid()
             plt.title(f"{pais_seleccionado.upper()}'s Gene Index Evolution")
             plt.ylabel("gene index")
@@ -117,8 +89,6 @@ class Interfaz:
 
         else:
             print("Por favor, seleccione un país válido antes de mostrar el gráfico.")
-
-
 
     def habilitar_boton(self, event=None):
         if self.combo_paises.get() != "" and self.combo_paises.get() in self.paises:
@@ -150,29 +120,3 @@ class Interfaz:
             self.combo_paises.config(foreground="gray")     # Cambiar color de texto a gris
             self.boton_mostrar.config(state="disabled")     # Deshabilitar botón
 
-def process_values(values):
-
-    # Cargar la biblioteca compartida
-    libgini = ctypes.CDLL('./libgini_calc.so')
-
-    # Definir los tipos de argumentos y el tipo de retorno de la función en C
-    libgini.float_array_to_int_array.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
-    
-    # Convertir la lista de Python a un arreglo de C
-    data_array = (ctypes.c_float * len(values))(*values)
-
-    output = np.zeros(len(values), dtype=np.int32)
-    result_array = (ctypes.c_int * len(values))(*output)
-    
-    # Llamar a la función de C
-    libgini.float_array_to_int_array(data_array, len(values), result_array)
-
-    return np.fromiter(result_array, dtype=np.int32, count=len(values))
-
-def main():
-    ventana = tk.Tk()
-    app = Interfaz(ventana)
-    ventana.mainloop()
-
-if __name__ == "__main__":
-    main()

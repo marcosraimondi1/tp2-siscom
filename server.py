@@ -13,24 +13,9 @@ def run_server():
     
     filtered = filter_by_country(data[1], country)
 
-    values,fechas = get_values(filtered)   # Lista de flotantes 
-    values_int = np.zeros(len(values), dtype=np.int32)
+    values,fechas = get_values_and_dates(filtered)   # Lista de flotantes 
 
-    # Cargar la biblioteca compartida
-    libgini = ctypes.CDLL('./libgini_calc.so')
-
-    # Definir los tipos de argumentos y el tipo de retorno de la función en C
-    libgini.float_array_to_int_array.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
-    
-    # Convertir la lista de Python a un arreglo de C
-    data_array = (ctypes.c_float * len(values))(*values)
-
-    result_array = (ctypes.c_int * len(values))(*values_int)
-    
-    # Llamar a la función de C
-    libgini.float_array_to_int_array(data_array, len(values), result_array)
-
-    results = np.fromiter(result_array, dtype=np.int32, count=len(values))
+    results = process_values(values)
 
     plt.figure()
     plt.plot(fechas[::-1], values[::-1], marker="x")
@@ -43,14 +28,31 @@ def run_server():
     plt.savefig(f"./results/{country}_gene_index.png")
 
     
+def process_values(values):
 
+    # Cargar la biblioteca compartida
+    libgini = ctypes.CDLL('./libgini_calc.so')
+
+    # Definir los tipos de argumentos y el tipo de retorno de la función en C
+    libgini.float_array_to_int_array.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+    
+    # Convertir la lista de Python a un arreglo de C
+    data_array = (ctypes.c_float * len(values))(*values)
+
+    output = np.zeros(len(values), dtype=np.int32)
+    result_array = (ctypes.c_int * len(values))(*output)
+    
+    # Llamar a la función de C
+    libgini.float_array_to_int_array(data_array, len(values), result_array)
+
+    return np.fromiter(result_array, dtype=np.int32, count=len(values))
 
 def get_data():
     response = requests.get(API_URL)
 
     if response.status_code != 200:
         print("Failed fetching data from API", response)
-        exit()
+        return [] 
 
     data = response.json()
 
@@ -64,7 +66,7 @@ def filter_by_country(country_data, country):
 
     return filtered
 
-def get_values(filtered_data):
+def get_values_and_dates(filtered_data):
     values = np.array([],dtype = np.float32)
     fechas = []
     for data in filtered_data:

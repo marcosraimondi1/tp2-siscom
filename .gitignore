@@ -3,4 +3,5 @@ venv/
 *.so
 *.o
 .vscode/
+__pycache__
 

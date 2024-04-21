@@ -103,12 +103,23 @@ python server.py
 Se ve el funcionamiento del programa desde el punto de vista del usuario, en la cual 
 usamos una interfaz visual creada desde python.
 
+Al abrir el programa el boton "mostrar grafico" se encuentra desactivado ya que se pide la seleccion de un pais para generar el mismo.
 
+![image](<testing screenshots/End_to_End_1.png>)
 
-FALTA IMAGEN FINAL
+Al realizar el despliegue de la lista de paises disponibles se puede seleccionar directamente el pais deseado o se puede opar por filtrar por letra. (Si el pais escrito no existe no se muestra y se desactiva el boton).
 
+![image](<testing screenshots/End_to_End_2_1.jpeg>)
 
+![image](<testing screenshots/End_to_End_2_0.jpeg>)
 
+Al seleccionar el pais deseado se activa el boton
+
+![image](<testing screenshots/End_to_End_3.png>)
+
+Al precionar el boton se genera el grafico en una ventana particular
+
+![image](<testing screenshots/End_to_End_4.png>)
 
 ### Prueba test función Assembler
 

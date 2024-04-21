@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 
 /**
@@ -21,15 +22,18 @@ void float_array_to_int_array(float *data, int size, int *result) {
   _sum_array(data, size, result);
 }
 
-// para probar ---------------------
+// para testing
 int main(int argc, char *argv[]) {
   float input[3] = {12.2, 5.45, 12.8};
   int output[3] = {0, 0, 0};
+  int expected[3] = {13, 6, 14};
 
   _sum_array(input, 3, output);
 
-  for (int i = 0; i < 3; i++)
-    printf("%f, %i\n", input[i], output[i]);
+  for (int i = 0; i < 3; i++) {
+    printf("in %f, out %i, exp %i\n", input[i], output[i], expected[i]);
+    assert(output[i] == expected[i]);
+  }
 
   return 0;
 }

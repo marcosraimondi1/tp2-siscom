@@ -8,6 +8,16 @@ Todo esto se complementa con una capa superior de interaz de usuario que permite
 
 ### Diagrama de Bloques
 
+```mermaid
+flowchart TD
+    A[Start Server] --> B(Get Data)
+    B --> C(Filter Data)
+    C --> D(Get Values and Dates)
+    D --> E(Process Values)
+    E --> F(Plot Result)
+    F --> B
+```
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/fd970110-dd68-4c2e-9869-f5b0310c3559)
 
 ### Diagrama de Secuencia

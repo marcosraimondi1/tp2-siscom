@@ -2,7 +2,9 @@
 
 ## Implemetación
 
-Se trata de un desarrollo por capas, en primera instancia se levanta un programa en **python** que utilizando la biblioteca *requests* hace una peticion del tipo **GET** a una [API publica](https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22). La respuesta se procesa y se convierte en un objeto json el cual se filtra para obtener los datos del indice gene del pais de interes (Argentina). Esta lista filtrada se pasa posteriormente convierte a un arreglo de C utilizando la libreria de *ctypes* que permite realizar la conversion de tipos de datos de python a tipos de dato aceptables para C. Con esto se puede proceder a utilizar las funciones de la libreria desarrollada en C. Esta libreria carga los valores en un arreglo el cual despues es graficado en python usando la libreria *matplotlib*. El grafico resultante se guarda en una imagen en el directorio results.
+Se trata de un desarrollo por capas, en primera instancia se levanta un programa en **python** que utilizando la biblioteca *requests* hace una peticion del tipo **GET** a una [API publica](https://api.worldbank.org/v2/en/country/all/indicator/SI.POV.GINI?format=json&date=2011:2020&per_page=32500&page=1&country=%22Argentina%22). La respuesta se procesa y se convierte en un objeto json el cual se filtra para obtener los datos del indice gene del pais de interes (Argentina). Esta lista filtrada se pasa posteriormente convierte a un arreglo de C utilizando la libreria de *ctypes* que permite realizar la conversion de tipos de datos de python a tipos de dato aceptables para C. Con esto se puede proceder a utilizar las funciones de la libreria desarrollada en C que a su vez se compila con codigo desarrollado en assembler usando convenciones de llamadas. Esta libreria carga los valores en un arreglo el cual despues es graficado en python usando la libreria *matplotlib*. 
+
+Todo esto se complementa con una capa superior de interaz de usuario que permite usar el programa de una manera intuitiva y amigable.
 
 ### Diagrama de Bloques
 
@@ -58,12 +60,17 @@ conda activate py32
 ```sh
 pip install --upgrade pip
 ```
-- Instalar librerias:
+- Instalar librerias necesarias para el programa:
 ```sh
 pip install numpy requests matplotlib
 ```
+- Libreria para correr tests de python:
+```sh
+pip install pytest
+```
 
 ### Ejecutar programa de Python
+
 ```sh
 python server.py
 ```
@@ -100,18 +107,13 @@ Resultados de la ejecución:
 
 ![image](<testing screenshots/Test_Assembler_function.png>)
 
-### Prueba test función en C
+### Tests Unitarios con pytest
 
-Se llama desde Python a la funcion de C pasando un arreglo de numeros 
-flotantes para ver que los valores retornados sean los correctos. 
-Pero  el punto principal es mostrar la conexión efectiva entre C y 
-Python a travez de la biblioteca requests y ctypes.
-
-![image](<testing screenshots/Test_C_Python_Conection_main_cod.png>)
-
-prueba de ejecución:
-
-![image](<testing screenshots/Test_C_Python_Conection.png>)
+Para correr los tests unitarios de python correr pytest en el directorio raiz:
+```sh
+pytest
+```
+![image](<testing screenshots/pytest.png>)
 
 ### GDB
 

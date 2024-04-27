@@ -187,18 +187,23 @@ end_loop:
 ### Medida de Performance
 Se utiliza timestamps al inicio y al final de la funcion de procesamiento de los datos desde python para tener una idea del tiempo que toma la funcion:
 
-- Usando llamada a C con codigo en assembly: 
+- Usando llamada a C con codigo en assembly:
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/4cfddffb-4ec0-4942-b10e-3e524ae852e7)
 
 - Usando codigo en python truncando a entero:
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/47b289ec-ff2a-4a6c-bee5-8e9963d0b2d3)
 
 - Usando codigo en python pero redondeando:
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/ed57322e-cf21-48b9-8aaa-60068c68d5ec)
 
 Se observa que el codigo en python es mas rapido al procesar los datos. esto se debe a que llamar la libreria de C desde python lleva mucho tiempo en relacion a los calculos que se deben hacer.  
 Si ahora se lleva a cabo la misma prueba pero con un arreglo de mayor tamano como entrada a la funcion, se obtienen los siguientes resultados:
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/bd1e7c00-06ed-42ca-8dce-aec9161e56ef)
+
 ![image](https://github.com/marcosraimondi1/tp2-siscom/assets/69517496/36fcb2f9-923b-4993-b8bf-fea1f4fa0c7b)
 
 Ahora si, vemos como es mas rapida en gran medida la funcion en assembler a comparacion con la funcion en python.

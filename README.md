@@ -242,19 +242,24 @@ gdb prueba
 ```sh
 break _sum_array
 ```
-En este caso se realiza el debug desde que se llama a la funcion en assembler.
+En este caso se realiza el siguiente debug:
+
+- Antes de iniciar el debug del programa se puede listar las instrucciones que se ejecutarán en el programa:
+
+![image](<testing screenshots/gdb_init_1.png>)
+
+- Una vez listadas las instrucciones se procede a colocar los breakpoints en las instrucciones las intrucciones deseadas:
+
+![image](<testing screenshots/gdb_init_2.png>)
+
+- Al observar la pila desde la direccion de la primer variable podemos observar los valores de los siguientes datos:
+
+![image](<testing screenshots/gdb_values.png>)
+En la imagen observamos que los primeros (12 bytes corresponden a los valores flotantes del vector antes declarado y los siguientes 12 bytes al vector de enteros inicializados en 0)
 
 - Se debe ir paso por paso con la instrucción nexti se vera lo siguiente:
 
-![image](<testing screenshots/gdb_1.png>)
+![mage](<testing screenshots/gdb_values_heap.png>)
 
-En donde podemos observar que se ingresa al bucle creado en el programa de assembler.
-
-- luego una vez aqui se puede ver el stack de llamadas que es el siguiente:
-
-![image](<testing screenshots/gdb_3_backtrace.png>)
-
-- Tambien si se utiliza el comando info locals podemos ver como se hace la asignación nuestro puntero en cuanto finaliza la funcion de assembler:
-
-![image](<testing screenshots/gdb_4_Asignation.png>)
+En donde podemos observar que se ingresa al bucle creado en el programa de assembler y se guarda en la pila la direccion de retorno.
 
